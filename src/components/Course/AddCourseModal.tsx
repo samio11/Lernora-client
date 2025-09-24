@@ -43,6 +43,7 @@ export function AddCourseModal() {
   });
 
   const onSubmit = async (data: any) => {
+    const courseCreate = toast.loading("Course is adding");
     const formData = new FormData();
 
     formData.append("data", JSON.stringify(data));
@@ -50,23 +51,15 @@ export function AddCourseModal() {
     if (video) formData.append("video", video);
 
     try {
-      // const res = await addCourse(formData).unwrap();
-
-      //   console.log(
-      //     "Submitted FormData:",
-      //     formData.get("data"),
-      //     formData.get("image"),
-      //     formData.get("video")
-      //   );
       const result = await createCourse(formData);
       if (result) {
-        toast.success("Course Added");
+        toast.success("Course Added", { id: courseCreate });
         setOpen(false);
         form.reset();
         setImage(null);
         setVideo(null);
       } else {
-        toast.error("Course Added failed");
+        toast.error("Course Added failed", { id: courseCreate });
         setOpen(false);
         form.reset();
         setImage(null);
@@ -74,7 +67,7 @@ export function AddCourseModal() {
       }
     } catch (err) {
       console.error(err);
-      toast.error("Something went wrong!");
+      toast.error("Something went wrong!", { id: courseCreate });
     }
   };
 

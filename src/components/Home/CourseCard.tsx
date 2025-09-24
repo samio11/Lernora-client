@@ -12,8 +12,30 @@ import {
 } from "@/components/ui/dialog";
 import { ICourse } from "@/type/course.interface";
 import { Trash2Icon } from "lucide-react";
+import Swal from "sweetalert2";
+import { deleteACourse } from "@/services/course/course.services";
 
 const CourseCard = ({ course }: { course: ICourse }) => {
+  const handleDeleteCourse = async (id: string) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        await deleteACourse(id);
+        Swal.fire({
+          title: "Deleted!",
+          text: "Your file has been deleted.",
+          icon: "success",
+        });
+      }
+    });
+  };
   return (
     <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-shadow duration-300 flex flex-col">
       {/* Course Image */}
@@ -53,7 +75,10 @@ const CourseCard = ({ course }: { course: ICourse }) => {
             </DialogClose>
           </DialogContent>
         </Dialog>
-        <button className="btn btn-error btn-outline btn-wide my-3 mx-auto">
+        <button
+          onClick={() => handleDeleteCourse(course?._id as string)}
+          className="btn btn-error btn-outline btn-wide my-3 mx-auto"
+        >
           <Trash2Icon></Trash2Icon>Delete
         </button>
       </div>
